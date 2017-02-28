@@ -1,7 +1,7 @@
 all:
 	rm -rf build
 	mkdir build
-	mpicc lab1.c -o build/lab1
+	mpicc -std=c99 lab1.c -o build/lab1
 
 clean:
 	rm -rf build

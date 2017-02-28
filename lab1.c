@@ -9,10 +9,12 @@ long * array = NULL;
 
 long * getArr()
 {
+    int i = 0;    
+
     if (!array)
     {
         array = malloc(sizeof(long) * ARR_SIZE);
-        for (int i = 0; i < ARR_SIZE; i++)
+        for (i = 0; i < ARR_SIZE; i++)
             array[i] = i;
 
         return array;
@@ -25,7 +27,7 @@ long * getArr()
 
 int main (int argc, char *argv[])
 {
-    int numtasks, taskid;
+    int numtasks, taskid, i;
     long sum = 0;
     long * arr = getArr();
     
@@ -39,7 +41,7 @@ int main (int argc, char *argv[])
     {
         printf("Num tasks: %d\n", numtasks);
         sum = 0;
-        for (int i = 0; i < ARR_SIZE; i++)
+        for (i = 0; i < ARR_SIZE; i++)
             sum += i;
 
         printf("Correct sum: %li\n", sum);
@@ -47,14 +49,14 @@ int main (int argc, char *argv[])
         long tmp = 0;
         long total_sum = 0;
         double start_time = MPI_Wtime();
-        for (int i = 1; i < numtasks; i++)
+        for (i = 1; i < numtasks; i++)
         {
             MPI_Recv(&tmp, 1, MPI_LONG, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             //printf("Tmp: %li\n", tmp);
             total_sum += tmp;
         }
 
-        for (int i = ARR_SIZE - 1; i > ARR_SIZE - ARR_SIZE % numtasks - block_size - 1; i--)
+        for (i = ARR_SIZE - 1; i > ARR_SIZE - ARR_SIZE % numtasks - block_size - 1; i--)
             total_sum += arr[i];
         double stop_time = MPI_Wtime();
         printf("Total sum: %li\nTotal time:%f\n", total_sum, stop_time - start_time);
@@ -66,7 +68,7 @@ int main (int argc, char *argv[])
         long sum = 0;
         if (arr)
         {  
-            for (int i = taskid * block_size; i < taskid * block_size + block_size; i++)
+            for (i = taskid * block_size; i < taskid * block_size + block_size; i++)
                 sum += arr[i];
             MPI_Send(&sum, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD);
         }
